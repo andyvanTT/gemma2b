@@ -15,13 +15,34 @@ checkpoint.
 
 ## Layout
 
-    gemma2b.py            openpi's gemma.py (Gemma adaptation for Pi)
-    forward_pass.py       builds gemma_2b, loads real weights, runs a forward pass
+    gemma_torch.py        PyTorch reference impl of the Gemma 1 2B backbone (Tenstorrent)
+    step.py               loads real weights, runs the PyTorch forward, prints shapes per step
+    verify_torch_vs_jax.py  checks PyTorch backbone == JAX backbone numerically
+
+    gemma2b.py            openpi's gemma.py (JAX/Flax Gemma adaptation for Pi)
+    forward_pass.py       JAX: builds gemma_2b, loads real weights, runs a forward pass
     download_weights.py   mirrors the public pi05_base checkpoint into ./weights
     build_env.sh          builds the .venv
-    .venv/                Python 3.11 env (jax[cuda12]==0.5.3, flax, orbax, ...)
+    .venv/                Python 3.11 env (jax[cuda12]==0.5.3, flax, orbax, torch-cpu, ...)
     openpi/               cloned openpi (provides openpi.models.lora etc.)
     weights/pi05_base/params/   the orbax checkpoint (~12.4 GB)
+
+## PyTorch reference (Gemma 1 2B backbone only) -- start here for tt_metal/CUDA
+
+    .venv/bin/python step.py                # forward pass + per-step shape table
+    .venv/bin/python verify_torch_vs_jax.py # confirms it matches JAX (max|diff| ~1e-4)
+
+`step.py` runs ONLY the Gemma 1 2B backbone (`gemma_torch.GemmaBlock/Attention/MLP`),
+not the surrounding pi0.5 model / action expert. It reads the JAX checkpoint purely to
+get the trained weights and converts them from openpi's einsum layout to the PyTorch
+linear layout:
+
+    q_einsum  (N,D,H)  -> q_proj  (N*H, D)        gating_einsum[0] (D,hid) -> gate_proj (hid,D)
+    kv_einsum (K,D,H)  -> k/v_proj (K*H, D)       gating_einsum[1] (D,hid) -> up_proj   (hid,D)
+    attn_vec  (N,H,D)  -> o_proj  (D, N*H)        linear           (hid,D) -> down_proj (D,hid)
+
+Runs fp32 on CPU (the venv has CPU torch) -- the intended faithful reference before the
+hardware port.
 
 ## Setup
 
