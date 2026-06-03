@@ -1,0 +1,5 @@
+JAX devices (should be the 4090 only): [CudaDevice(id=0)]
+
+gemma_2b config: width=2048 depth=18 mlp_dim=16384 heads=8 kv_heads=1 head_dim=256
+
+restoring params from /home/mechanism/work/gemma2b/weights/pi05_base/params ...

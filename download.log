@@ -1,0 +1,26 @@
+Found 20 objects, 12.44 GB total
+[1/20] cached          0.00 MB  (0.00/12.44 GB)  checkpoints/pi05_base/params/_CHECKPOINT_METADATA
+[2/20] cached          0.02 MB  (0.00/12.44 GB)  checkpoints/pi05_base/params/_METADATA
+[3/20] cached          0.01 MB  (0.00/12.44 GB)  checkpoints/pi05_base/params/_sharding
+[4/20] cached          0.01 MB  (0.00/12.44 GB)  checkpoints/pi05_base/params/array_metadatas/process_0
+[5/20] cached          0.00 MB  (0.00/12.44 GB)  checkpoints/pi05_base/params/commit_success.txt
+[6/20] cached          0.00 MB  (0.00/12.44 GB)  checkpoints/pi05_base/params/d/1c4302d2d2000b5f3eb4fa1350fdef9a
+[7/20] cached          0.00 MB  (0.00/12.44 GB)  checkpoints/pi05_base/params/manifest.ocdbt
+Traceback (most recent call last):
+  File "/home/mechanism/work/gemma2b/download_weights.py", line 73, in <module>
+    sys.exit(main())
+  File "/home/mechanism/work/gemma2b/download_weights.py", line 65, in main
+    for i, (name, size, status) in enumerate(ex.map(download, objs), 1):
+  File "/home/mechanism/anaconda3/lib/python3.9/concurrent/futures/_base.py", line 609, in result_iterator
+    yield fs.pop().result()
+  File "/home/mechanism/anaconda3/lib/python3.9/concurrent/futures/_base.py", line 446, in result
+    return self.__get_result()
+  File "/home/mechanism/anaconda3/lib/python3.9/concurrent/futures/_base.py", line 391, in __get_result
+    raise self._exception
+  File "/home/mechanism/anaconda3/lib/python3.9/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/home/mechanism/work/gemma2b/download_weights.py", line 55, in download
+    tmp.rename(dest)
+  File "/home/mechanism/anaconda3/lib/python3.9/pathlib.py", line 1382, in rename
+    self._accessor.rename(self, target)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/mechanism/work/gemma2b/weights/pi05_base/params/ocdbt.process_0/d/0832cad6c37f82d4eedd897dcbb8da9d.part' -> '/home/mechanism/work/gemma2b/weights/pi05_base/params/ocdbt.process_0/d/0832cad6c37f82d4eedd897dcbb8da9d'
